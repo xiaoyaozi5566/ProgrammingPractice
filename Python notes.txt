@@ -16,6 +16,11 @@ Print
         print "hello",
     print multiple items:
         print a, b
+    format:
+        print '{0:2d} {1:3d} {2:4d}'.format(x, x*x, x*x*x)
+    %:
+        >>> import math
+        >>> print 'The value of PI is approximately %5.3f.' % math.pi
 
 Multi-line string:
     """..."""
@@ -43,6 +48,10 @@ Substring:
     >>> word[-2:] # characters from the second-last (included) to the end
     'on'
 
+String replace:
+    >>> 'tea for too'.replace('too', 'two')
+    'tea for two'
+    
 Length of a string:
     >>> s = 'supercalifragilisticexpialidocious'
     >>> len(s)
@@ -353,3 +362,186 @@ zip:
     >>> answers = ['lancelot', 'the holy grail', 'blue']
     >>> for q, a in zip(questions, answers):
     ...     print 'What is your {0}?  It is {1}.'.format(q, a)
+    
+Module:
+    A module is a file containing Python definitions and statements.
+    
+    >>> import fibo
+    >>> fibo.fib(1000)
+    1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
+    
+    Execute module only when it is the main file, the code is not run
+    when the module is imported
+    
+    if __name__ == "__main__":
+        fib(int(sys.argv[1]))
+
+Import:
+    >>> from fibo import fib, fib2
+    >>> fib(500)
+    
+    This does not introduce fibo
+    
+    >>> from fibo import *
+    >>> fib(500)
+    1 1 2 3 5 8 13 21 34 55 89 144 233 377
+    
+    This imports all names except those beginning with an underscore (_).
+
+Packages:
+    Structure 
+    
+    sound/                          Top-level package
+          __init__.py               Initialize the sound package
+          formats/                  Subpackage for file format conversions
+                  __init__.py
+                  wavread.py
+                  wavwrite.py
+                  aiffread.py
+                  aiffwrite.py
+                  auread.py
+                  auwrite.py
+                  ...
+          effects/                  Subpackage for sound effects
+                  __init__.py
+                  echo.py
+                  surround.py
+                  reverse.py
+                  ...
+          filters/                  Subpackage for filters
+                  __init__.py
+                  equalizer.py
+                  vocoder.py
+                  karaoke.py
+                  ...
+    
+    import sound.effects.echo
+    sound.effects.echo.echofilter(input, output, delay=0.7, atten=4)
+    
+    from sound.effects import echo
+    echo.echofilter(input, output, delay=0.7, atten=4)
+
+Files:
+    >>> f = open('workfile', 'r')
+    >>> for line in f:
+            ...
+    
+    >>> f.read()
+    'This is the entire file.\n'
+    >>> f.read()
+    
+    >>> f.readline()
+    'This is the first line of the file.\n'
+    >>> f.readline()
+    'Second line of the file\n'
+    >>> f.readline()
+    ''
+    
+    >>> f.write('This is a test\n')
+    
+    >>> with open('workfile', 'r') as f:
+    ...     read_data = f.read()
+    >>> f.closed
+    True
+
+Exceptions:
+    Handle exceptions:
+    >>> while True:
+    ...     try:
+    ...         x = int(raw_input("Please enter a number: "))
+    ...         break
+    ...     except ValueError:
+    ...         print "Oops!  That was no valid number.  Try again..."
+    ...
+    
+    Raise exceptions:
+    >>> try:
+    ...     raise NameError('HiThere')
+    ... except NameError:
+    ...     print 'An exception flew by!'
+    ...     raise
+    ...
+    
+    Clean-up actions:
+    >>> try:
+    ...     raise KeyboardInterrupt
+    ... finally:
+    ...     print 'Goodbye, world!'
+    ...
+
+Classes:
+    Attribute references:
+        class MyClass:
+            """A simple example class"""
+            i = 12345
+            def f(self):
+                return 'hello world'
+        
+        MyClass.i
+        MyClass.f
+    
+    Class instantiation:
+        x = MyClass()
+    
+    When a class defines an __init__() method, class instantiation 
+    automatically invokes __init__() for the newly-created class instance.
+    
+    >>> class Complex:
+    ...     def __init__(self, realpart, imagpart):
+    ...         self.r = realpart
+    ...         self.i = imagpart
+    ...
+    >>> x = Complex(3.0, -4.5)
+    >>> x.r, x.i
+    (3.0, -4.5)
+
+    Generally speaking, instance variables are for data unique to each 
+    instance and class variables are for attributes and methods shared by 
+    all instances of the class:
+    
+    class Dog:
+
+        kind = 'canine'         # class variable shared by all instances
+
+        def __init__(self, name):
+            self.name = name    # instance variable unique to each instance
+
+    >>> d = Dog('Fido')
+    >>> e = Dog('Buddy')
+    >>> d.kind                  # shared by all dogs
+    'canine'
+    >>> e.kind                  # shared by all dogs
+    'canine'
+    >>> d.name                  # unique to d
+    'Fido'
+    >>> e.name                  # unique to e
+    'Buddy'
+    
+    shared data can have possibly surprising effects with involving mutable 
+    objects such as lists and dictionaries. 
+    
+    class Dog:
+
+        tricks = []             # mistaken use of a class variable
+
+        def __init__(self, name):
+            self.name = name
+
+        def add_trick(self, trick):
+            self.tricks.append(trick)
+
+    >>> d = Dog('Fido')
+    >>> e = Dog('Buddy')
+    >>> d.add_trick('roll over')
+    >>> e.add_trick('play dead')
+    >>> d.tricks                # unexpectedly shared by all dogs
+    ['roll over', 'play dead']
+
+    Inheritance:
+        class DerivedClassName(Base1, Base2, Base3):
+            <statement-1>
+            .
+            .
+            .
+            <statement-N>
+    
